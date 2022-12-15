@@ -7,17 +7,21 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
     var midiDevicesObserver: NSKeyValueObservation?
     let deviceManager = MIKMIDIDeviceManager.shared
     
+    func validDevice(dv: MIKMIDIDevice) -> Bool {
+        !dv.isVirtual && dv.entities.count > 0 && !(dv.manufacturer ?? "").isEmpty
+    }
+    
     override public func load() {
         midiDevicesObserver = deviceManager.observe(\.availableDevices) { (dm, _) in
             // Devices change
             let d = Dictionary.init(uniqueKeysWithValues: dm.availableDevices
+                .filter(self.validDevice)
                 .enumerated()
-                .filter({ !$1.isVirtual && $1.entities.count > 0 && !($1.manufacturer ?? "").isEmpty })
-                .map({ (String($0), $1.manufacturer ?? "Unknown") }))
+                .map({ (String($0), $1.manufacturer ?? "") }))
             self.notifyListeners("deviceChange", data: d)
             
             // Listen to MIDI events from all sources
-            for device in self.deviceManager.availableDevices {
+            for device in self.deviceManager.availableDevices.filter(self.validDevice) {
                 for entity in device.entities {
                     for source in entity.sources {
                         do {
@@ -79,7 +83,7 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
                                 self.notifyListeners("commandSend", data: cmdData)
                             })
                         } catch {
-                            self.notifyListeners("connectError", data: [source.displayName ?? "Unknown": error])
+                            self.notifyListeners("connectError", data: [source.displayName ?? "Unknown": String(describing: error)])
                         }
                     }
                 }
@@ -90,6 +94,9 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
     @objc func listDevices(_ call: CAPPluginCall) {
         call.resolve([
             "devices": MIKMIDIDeviceManager.shared.availableDevices
+                .filter(self.validDevice)
+                .enumerated()
+                .map({ (String($0), $1.manufacturer ?? "") })
         ])
     }
 }
