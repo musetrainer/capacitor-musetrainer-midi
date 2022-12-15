@@ -11,7 +11,7 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
     public override func load() {
         midiDevicesObserver = deviceManager.observe(\.availableDevices) { (dm, _) in
             let d = Dictionary.init(uniqueKeysWithValues: dm.availableDevices.enumerated().map({ (String($0), $1.manufacturer ?? "Unknown") }))
-            self.notifyListeners("deviceChanged", data: d)
+            self.notifyListeners("deviceChange", data: d)
             
             for source in self.deviceManager.connectedInputSources {
                 do {
@@ -19,7 +19,7 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
                         let cmd = Dictionary.init(uniqueKeysWithValues: cmds.map({
                             (String(describing: $0.commandType), $0)
                         }))
-                        self.notifyListeners("commandData", data: cmd)
+                        self.notifyListeners("commandSend", data: cmd)
                     }
                 } catch {
                     self.notifyListeners("connectError", data: [source.displayName ?? "Unknown":error])
