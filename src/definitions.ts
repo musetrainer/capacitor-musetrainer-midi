@@ -1,3 +1,10 @@
+import type { PluginListenerHandle } from '@capacitor/core';
+
 export interface CapacitorMuseTrainerMidiPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  addListener(
+    eventName: 'deviceChange' | 'commandSend' | 'connectError',
+    listenerFunc: (...args: any[]) => void,
+  ): PluginListenerHandle;
+
+  listDevices(): Promise<{ devices: any[] }>;
 }
