@@ -19,7 +19,7 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
                         let cmd = Dictionary.init(uniqueKeysWithValues: cmds.map({
                             (String(describing: $0.commandType), $0)
                         }))
-                        self.notifyListeners("midiData", data: cmd)
+                        self.notifyListeners("commandData", data: cmd)
                     }
                 } catch {
                     self.notifyListeners("connectError", data: [source.displayName ?? "Unknown":error])
