@@ -1,5 +1,6 @@
 import Foundation
 import Capacitor
+import MIKMIDI
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
@@ -7,12 +8,20 @@ import Capacitor
  */
 @objc(CapacitorMuseTrainerMidiPlugin)
 public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
-    private let implementation = CapacitorMuseTrainerMidi()
+    var midiDevicesObserver: NSKeyValueObservation?
+    let deviceManager = MIKMIDIDeviceManager.shared
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
+    public override func load() {
+        midiDevicesObserver = deviceManager.observe(\.availableDevices) { (dm, _) in
+            let d = Dictionary.init(uniqueKeysWithValues: dm.availableDevices.map({ ($0.manufacturer ?? "", $0.model ?? "") }))
+            self.notifyListeners("deviceChange", data: d)
+        };        <#code#>
+    }
+
+
+    @objc func listDevices(_ call: CAPPluginCall) {
         call.resolve([
-            "value": implementation.echo(value)
+            "value": MIKMIDIDeviceManager.shared.availableDevices
         ])
     }
 }
