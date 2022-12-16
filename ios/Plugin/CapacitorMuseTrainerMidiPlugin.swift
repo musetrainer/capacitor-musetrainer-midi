@@ -26,61 +26,55 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
                     for source in entity.sources {
                         do {
                             try self.deviceManager.connectInput(source, eventHandler: { (_, cmds) in
-                                let cmdData = Dictionary.init(uniqueKeysWithValues: cmds
-                                    .enumerated()
-                                    .map({ (idx, cmd) in
-                                        var cmdStr: String
-                                        switch cmd.commandType {
-                                        case .noteOff:
-                                            cmdStr = "noteOff"
-                                        case .noteOn:
-                                            cmdStr = "noteOn"
-                                        case .polyphonicKeyPressure:
-                                            cmdStr = "polyphonicKeyPressure"
-                                        case .controlChange:
-                                            cmdStr = "controlChage"
-                                        case .programChange:
-                                            cmdStr = "programChange"
-                                        case .channelPressure:
-                                            cmdStr = "channelPressure"
-                                        case .pitchWheelChange:
-                                            cmdStr = "pitchWheelChange"
-                                        case .systemMessage:
-                                            cmdStr = "systemMessage"
-                                        case .systemExclusive:
-                                            cmdStr = "systemExclusive"
-                                        case .systemTimecodeQuarterFrame:
-                                            cmdStr = "systemTimecodeQuarterFrame"
-                                        case .systemSongPositionPointer:
-                                            cmdStr = "systemSongPositionPointer"
-                                        case .systemSongSelect:
-                                            cmdStr = "systemSongSelect"
-                                        case .systemTuneRequest:
-                                            cmdStr = "systemTuneRequest"
-                                        case .systemTimingClock:
-                                            cmdStr = "systemTimingClock"
-                                        case .systemStartSequence:
-                                            cmdStr = "systemStartSequence"
-                                        case .systemContinueSequence:
-                                            cmdStr = "systemContinueSequence"
-                                        case .systemStopSequence:
-                                            cmdStr = "systemStopSequence"
-                                        case .systemKeepAlive:
-                                            cmdStr = "systemKeepAlive"
-                                        @unknown default:
-                                            cmdStr = "unknown"
-                                        }
-                                        
-                                        let cmdData: [String: String] = [
-                                            "command": cmdStr,
-                                            "byte1": String(cmd.dataByte1),
-                                            "byte2": String(cmd.dataByte2)
-                                        ]
-                                        
-                                        return (String(idx), cmdData)
-                                    }))
-                                
-                                self.notifyListeners("commandSend", data: cmdData)
+                                for cmd in cmds {
+                                    var cmdStr: String
+                                    switch cmd.commandType {
+                                    case .noteOff:
+                                        cmdStr = "noteOff"
+                                    case .noteOn:
+                                        cmdStr = "noteOn"
+                                    case .polyphonicKeyPressure:
+                                        cmdStr = "polyphonicKeyPressure"
+                                    case .controlChange:
+                                        cmdStr = "controlChage"
+                                    case .programChange:
+                                        cmdStr = "programChange"
+                                    case .channelPressure:
+                                        cmdStr = "channelPressure"
+                                    case .pitchWheelChange:
+                                        cmdStr = "pitchWheelChange"
+                                    case .systemMessage:
+                                        cmdStr = "systemMessage"
+                                    case .systemExclusive:
+                                        cmdStr = "systemExclusive"
+                                    case .systemTimecodeQuarterFrame:
+                                        cmdStr = "systemTimecodeQuarterFrame"
+                                    case .systemSongPositionPointer:
+                                        cmdStr = "systemSongPositionPointer"
+                                    case .systemSongSelect:
+                                        cmdStr = "systemSongSelect"
+                                    case .systemTuneRequest:
+                                        cmdStr = "systemTuneRequest"
+                                    case .systemTimingClock:
+                                        cmdStr = "systemTimingClock"
+                                    case .systemStartSequence:
+                                        cmdStr = "systemStartSequence"
+                                    case .systemContinueSequence:
+                                        cmdStr = "systemContinueSequence"
+                                    case .systemStopSequence:
+                                        cmdStr = "systemStopSequence"
+                                    case .systemKeepAlive:
+                                        cmdStr = "systemKeepAlive"
+                                    @unknown default:
+                                        cmdStr = "unknown"
+                                    }
+                                    
+                                    self.notifyListeners("commandSend", data: [
+                                        "command": cmdStr,
+                                        "dataByte1": cmd.dataByte1,
+                                        "dataByte2": cmd.dataByte2
+                                    ])
+                                }
                             })
                         } catch {
                             self.notifyListeners("connectError", data: [source.displayName ?? "Unknown": String(describing: error)])

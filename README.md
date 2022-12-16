@@ -1,6 +1,8 @@
 # capacitor-musetrainer-midi
 
-Capacitor MIDI plugin by MuseTrainer
+Capacitor MIDI plugin by MuseTrainer.
+
+Only support iOS for now.
 
 ## Install
 
