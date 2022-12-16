@@ -10,7 +10,7 @@ export interface CapacitorMuseTrainerMidiPlugin {
     command,
     timestamp,
   }: {
-    command: string;
+    command: number[];
     timestamp: number;
   }): Promise<void>;
   listDevices(): Promise<{ devices: any[] }>;
