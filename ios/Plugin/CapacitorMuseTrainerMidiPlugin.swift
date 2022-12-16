@@ -27,50 +27,50 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
                         do {
                             try self.deviceManager.connectInput(source, eventHandler: { (_, cmds) in
                                 for cmd in cmds {
-                                    var cmdStr: String
+                                    var cmdType: String
                                     switch cmd.commandType {
                                     case .noteOff:
-                                        cmdStr = "noteOff"
+                                        cmdType = "noteOff"
                                     case .noteOn:
-                                        cmdStr = "noteOn"
+                                        cmdType = "noteOn"
                                     case .polyphonicKeyPressure:
-                                        cmdStr = "polyphonicKeyPressure"
+                                        cmdType = "polyphonicKeyPressure"
                                     case .controlChange:
-                                        cmdStr = "controlChage"
+                                        cmdType = "controlChage"
                                     case .programChange:
-                                        cmdStr = "programChange"
+                                        cmdType = "programChange"
                                     case .channelPressure:
-                                        cmdStr = "channelPressure"
+                                        cmdType = "channelPressure"
                                     case .pitchWheelChange:
-                                        cmdStr = "pitchWheelChange"
+                                        cmdType = "pitchWheelChange"
                                     case .systemMessage:
-                                        cmdStr = "systemMessage"
+                                        cmdType = "systemMessage"
                                     case .systemExclusive:
-                                        cmdStr = "systemExclusive"
+                                        cmdType = "systemExclusive"
                                     case .systemTimecodeQuarterFrame:
-                                        cmdStr = "systemTimecodeQuarterFrame"
+                                        cmdType = "systemTimecodeQuarterFrame"
                                     case .systemSongPositionPointer:
-                                        cmdStr = "systemSongPositionPointer"
+                                        cmdType = "systemSongPositionPointer"
                                     case .systemSongSelect:
-                                        cmdStr = "systemSongSelect"
+                                        cmdType = "systemSongSelect"
                                     case .systemTuneRequest:
-                                        cmdStr = "systemTuneRequest"
+                                        cmdType = "systemTuneRequest"
                                     case .systemTimingClock:
-                                        cmdStr = "systemTimingClock"
+                                        cmdType = "systemTimingClock"
                                     case .systemStartSequence:
-                                        cmdStr = "systemStartSequence"
+                                        cmdType = "systemStartSequence"
                                     case .systemContinueSequence:
-                                        cmdStr = "systemContinueSequence"
+                                        cmdType = "systemContinueSequence"
                                     case .systemStopSequence:
-                                        cmdStr = "systemStopSequence"
+                                        cmdType = "systemStopSequence"
                                     case .systemKeepAlive:
-                                        cmdStr = "systemKeepAlive"
+                                        cmdType = "systemKeepAlive"
                                     @unknown default:
-                                        cmdStr = "unknown"
+                                        cmdType = "unknown"
                                     }
                                     
-                                    self.notifyListeners("commandSend", data: [
-                                        "command": cmdStr,
+                                    self.notifyListeners("commandReceive", data: [
+                                        "type": cmdType,
                                         "dataByte1": cmd.dataByte1,
                                         "dataByte2": cmd.dataByte2
                                     ])
@@ -92,5 +92,35 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
                 .enumerated()
                 .map({ (String($0), $1.manufacturer ?? "") })
         ])
+    }
+    
+    @objc func sendCommand(_ call: CAPPluginCall) {
+        let cmd = call.getString("command") ?? ""
+        if cmd.isEmpty {
+            call.reject("Invalid command")
+            return
+        }
+        
+        let ts = UInt64(truncatingIfNeeded: call.getInt("timestamp") ?? 0)
+        let command = MIKMIDICommand.from(command: cmd, timestamp: ts)
+        
+        var err: Error?
+        for device in deviceManager.availableDevices {
+            for entity in device.entities {
+                for dest in entity.destinations {
+                    do {
+                        try deviceManager.send([command], to: dest)
+                    } catch {
+                        err = error
+                    }
+                }
+            }
+        }
+        
+        if let e = err {
+            call.reject(e.localizedDescription)
+        } else {
+            call.resolve()
+        }
     }
 }
