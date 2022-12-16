@@ -18,7 +18,8 @@ npx cap sync
 
 <docgen-index>
 
-* [`addListener('deviceChange' | 'commandSend' | 'connectError', ...)`](#addlistenerdevicechange--commandsend--connecterror)
+* [`addListener('deviceChange' | 'commandReceive' | 'connectError', ...)`](#addlistenerdevicechange--commandreceive--connecterror)
+* [`sendCommand(...)`](#sendcommand)
 * [`listDevices()`](#listdevices)
 * [Interfaces](#interfaces)
 
@@ -27,18 +28,31 @@ npx cap sync
 <docgen-api>
 <!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
 
-### addListener('deviceChange' | 'commandSend' | 'connectError', ...)
+### addListener('deviceChange' | 'commandReceive' | 'connectError', ...)
 
 ```typescript
-addListener(eventName: 'deviceChange' | 'commandSend' | 'connectError', listenerFunc: (...args: any[]) => void) => PluginListenerHandle
+addListener(eventName: 'deviceChange' | 'commandReceive' | 'connectError', listenerFunc: (args: any) => void) => PluginListenerHandle
 ```
 
-| Param              | Type                                                           |
-| ------------------ | -------------------------------------------------------------- |
-| **`eventName`**    | <code>'deviceChange' \| 'commandSend' \| 'connectError'</code> |
-| **`listenerFunc`** | <code>(...args: any[]) =&gt; void</code>                       |
+| Param              | Type                                                              |
+| ------------------ | ----------------------------------------------------------------- |
+| **`eventName`**    | <code>'deviceChange' \| 'commandReceive' \| 'connectError'</code> |
+| **`listenerFunc`** | <code>(args: any) =&gt; void</code>                               |
 
 **Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### sendCommand(...)
+
+```typescript
+sendCommand({ command, timestamp, }: { command: number[]; timestamp: number; }) => Promise<void>
+```
+
+| Param     | Type                                                   |
+| --------- | ------------------------------------------------------ |
+| **`__0`** | <code>{ command: number[]; timestamp: number; }</code> |
 
 --------------------
 

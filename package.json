@@ -1,6 +1,6 @@
 {
   "name": "capacitor-musetrainer-midi",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Capacitor MIDI plugin by MuseTrainer",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
