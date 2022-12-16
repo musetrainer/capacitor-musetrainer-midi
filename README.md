@@ -47,13 +47,12 @@ addListener(eventName: 'deviceChange' | 'commandReceive' | 'connectError', liste
 ### sendCommand(...)
 
 ```typescript
-sendCommand(command: string, timestamp: number) => Promise<void>
+sendCommand({ command, timestamp, }: { command: string; timestamp: number; }) => Promise<void>
 ```
 
-| Param           | Type                |
-| --------------- | ------------------- |
-| **`command`**   | <code>string</code> |
-| **`timestamp`** | <code>number</code> |
+| Param     | Type                                                 |
+| --------- | ---------------------------------------------------- |
+| **`__0`** | <code>{ command: string; timestamp: number; }</code> |
 
 --------------------
 

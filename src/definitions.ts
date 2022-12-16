@@ -6,6 +6,12 @@ export interface CapacitorMuseTrainerMidiPlugin {
     listenerFunc: (args: any) => void,
   ): PluginListenerHandle;
 
-  sendCommand(command: string, timestamp: number): Promise<void>;
+  sendCommand({
+    command,
+    timestamp,
+  }: {
+    command: string;
+    timestamp: number;
+  }): Promise<void>;
   listDevices(): Promise<{ devices: any[] }>;
 }

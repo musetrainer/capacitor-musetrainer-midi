@@ -95,12 +95,13 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
     }
     
     @objc func sendCommand(_ call: CAPPluginCall) {
-        let cmd = call.getString("command") ?? ""
-        if cmd.isEmpty {
+        let cmdArr = call.getArray("command") ?? []
+        if cmdArr.isEmpty {
             call.reject("Invalid command")
             return
         }
         
+        let cmd = cmdArr.map { UInt8( $0 as? Int ?? 0)}
         let ts = UInt64(truncatingIfNeeded: call.getInt("timestamp") ?? 0)
         let command = MIKMIDICommand.from(command: cmd, timestamp: ts)
         
