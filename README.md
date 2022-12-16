@@ -1,3 +1,6 @@
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/musetrainer/capacitor-musetrainer-midi/blob/master/LICENSE)
+[![version](https://img.shields.io/npm/v/capacitor-musetrainer-midi/latest.svg)](https://www.npmjs.com/package/capacitor-musetrainer-midi)
+  
 # capacitor-musetrainer-midi
 
 Capacitor MIDI plugin by MuseTrainer.
