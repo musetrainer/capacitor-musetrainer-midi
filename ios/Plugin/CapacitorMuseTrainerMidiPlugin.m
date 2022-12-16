@@ -5,4 +5,5 @@
 // each method the plugin supports using the CAP_PLUGIN_METHOD macro.
 CAP_PLUGIN(CapacitorMuseTrainerMidiPlugin, "CapacitorMuseTrainerMidi",
            CAP_PLUGIN_METHOD(listDevices, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(sendCommand, CAPPluginReturnPromise);
 )
