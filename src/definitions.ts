@@ -4,7 +4,7 @@ export interface CapacitorMuseTrainerMidiPlugin {
   addListener(
     eventName: 'deviceChange' | 'commandReceive' | 'connectError',
     listenerFunc: (args: any) => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   sendCommand({
     command,

@@ -31,7 +31,7 @@ npx cap sync
 ### addListener('deviceChange' | 'commandReceive' | 'connectError', ...)
 
 ```typescript
-addListener(eventName: 'deviceChange' | 'commandReceive' | 'connectError', listenerFunc: (args: any) => void) => PluginListenerHandle
+addListener(eventName: 'deviceChange' | 'commandReceive' | 'connectError', listenerFunc: (args: any) => void) => Promise<PluginListenerHandle>
 ```
 
 | Param              | Type                                                              |
@@ -39,7 +39,7 @@ addListener(eventName: 'deviceChange' | 'commandReceive' | 'connectError', liste
 | **`eventName`**    | <code>'deviceChange' \| 'commandReceive' \| 'connectError'</code> |
 | **`listenerFunc`** | <code>(args: any) =&gt; void</code>                               |
 
-**Returns:** <code><a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
 --------------------
 
