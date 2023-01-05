@@ -5,7 +5,11 @@
 
 Capacitor MIDI plugin by MuseTrainer.
 
-Only support iOS for now.
+## Supports
+
+- [x] Web
+- [x] iOS
+- [ ] Android
 
 ## Install
 
