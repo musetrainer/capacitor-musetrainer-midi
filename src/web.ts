@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { ListenerCallback, PluginListenerHandle } from '@capacitor/core';
 import { WebPlugin } from '@capacitor/core';
 
