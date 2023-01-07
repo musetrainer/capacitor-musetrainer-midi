@@ -28,7 +28,8 @@ export class CapacitorMuseTrainerMidiWeb
       }
 
       if (this.access) {
-        this.access.onstatechange = () => listenerFunc(this.listDevices());
+        this.access.onstatechange = () =>
+          this.listDevices().then(d => listenerFunc(d));
       }
 
       return {
@@ -117,6 +118,8 @@ export class CapacitorMuseTrainerMidiWeb
     this.midiInputs = inputs;
     this.midiOutputs = outputs;
 
-    return { devices: inputs.map(d => d.manufacturer || '') };
+    return {
+      devices: inputs.map(d => `${d.manufacturer}`),
+    };
   }
 }
