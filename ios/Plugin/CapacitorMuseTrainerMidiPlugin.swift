@@ -21,11 +21,11 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
     }
     
     func listenForDevices(_ dm: MIKMIDIDeviceManager) {
-        let d = Dictionary.init(uniqueKeysWithValues: dm.availableDevices
+        let devices = dm.availableDevices
             .filter(self.validDevice)
-            .enumerated()
-            .map({ (String($0), $1.manufacturer ?? "") }))
-        self.notifyListeners("deviceChange", data: d)
+            .map({ $0.manufacturer ?? "" })
+        let data = ["devices": devices]
+        self.notifyListeners("deviceChange", data: data)
     }
     
     func listenForCommands(_ dm: MIKMIDIDeviceManager) {
@@ -112,13 +112,11 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
             self.listenForDevices(deviceManager)
         }
         
-        call.resolve(
-            Dictionary.init(uniqueKeysWithValues: deviceManager.availableDevices
-                .filter(self.validDevice)
-                .enumerated()
-                .map({ (String($0), $1.manufacturer ?? "") })
-            )
-        )
+        let devices = deviceManager.availableDevices
+            .filter(self.validDevice)
+            .map({  $0.manufacturer ?? "" })
+
+        call.resolve(["devices": devices])
     }
     
     @objc func sendCommand(_ call: CAPPluginCall) {
