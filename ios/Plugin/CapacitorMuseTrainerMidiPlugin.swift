@@ -20,6 +20,11 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
         return false
     }
     
+    func midiListen(_ dm: MIKMIDIDeviceManager) {
+        self.listenForDevices(dm)
+        self.listenForCommands(dm)
+    }
+    
     func listenForDevices(_ dm: MIKMIDIDeviceManager) {
         let devices = dm.availableDevices
             .filter(self.validDevice)
@@ -98,25 +103,19 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
     
     override public func load() {
         midiDevicesObserver = deviceManager.observe(\.availableDevices) { (dm, _) in
-            // Listen for devices change
-            self.listenForDevices(dm)
-            
-            // Listen for MIDI events from all sources
-            self.listenForCommands(dm)
+            self.midiListen(dm)
         }
     }
     
     @objc func listDevices(_ call: CAPPluginCall) {
-        // Attach input sources
         if deviceManager.connectedInputSources.count == 0 {
-            self.listenForDevices(deviceManager)
+            self.midiListen(deviceManager)
+        } else {
+            let devices = deviceManager.availableDevices
+                .filter(self.validDevice)
+                .map({ $0.manufacturer ?? "" })
+            call.resolve(["devices": devices])
         }
-        
-        let devices = deviceManager.availableDevices
-            .filter(self.validDevice)
-            .map({  $0.manufacturer ?? "" })
-
-        call.resolve(["devices": devices])
     }
     
     @objc func sendCommand(_ call: CAPPluginCall) {
@@ -131,7 +130,7 @@ public class CapacitorMuseTrainerMidiPlugin: CAPPlugin {
         let command = MIKMIDICommand.from(command: cmd, timestamp: ts)
         
         var err: Error?
-        for device in deviceManager.availableDevices {
+        for device in deviceManager.availableDevices.filter(self.validDevice) {
             for entity in device.entities {
                 for dest in entity.destinations {
                     do {
