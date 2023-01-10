@@ -3,7 +3,7 @@
   
 # capacitor-musetrainer-midi
 
-Capacitor MIDI plugin by MuseTrainer.
+Capacitor MIDI plugin by MuseTrainer. Use internally in [MuseTrainer app](https://musetrainer.com).
 
 ## Supports
 
