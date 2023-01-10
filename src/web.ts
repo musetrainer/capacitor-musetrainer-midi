@@ -101,7 +101,13 @@ export class CapacitorMuseTrainerMidiWeb
   }
 
   async listDevices(): Promise<{ devices: any[] }> {
-    this.access = await navigator.requestMIDIAccess?.({ sysex: true });
+    if (!navigator.requestMIDIAccess) {
+      return {
+        devices: [],
+      };
+    }
+
+    this.access = await navigator.requestMIDIAccess({ sysex: true });
     if (!this.access) {
       return {
         devices: [],
