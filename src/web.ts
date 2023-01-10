@@ -101,13 +101,12 @@ export class CapacitorMuseTrainerMidiWeb
   }
 
   async listDevices(): Promise<{ devices: any[] }> {
-    if (!navigator.requestMIDIAccess) {
-      return {
-        devices: [],
-      };
+    try {
+      this.access = await navigator.requestMIDIAccess?.({ sysex: true });
+    } catch (error) {
+      // Ignore it, just return empty
     }
 
-    this.access = await navigator.requestMIDIAccess({ sysex: true });
     if (!this.access) {
       return {
         devices: [],
